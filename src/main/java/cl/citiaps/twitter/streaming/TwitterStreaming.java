@@ -87,6 +87,7 @@ public class TwitterStreaming {
 				System.out.println("--------- DOCUMENTO TWEET ----------- ");
 				System.out.println(status.getId());
 				System.out.println(status.getText());
+				System.out.println(status.getCreatedAt().toString());
 				System.out.println("\n");
 
 				MongoClient mongoClient = new MongoClient();
@@ -94,7 +95,8 @@ public class TwitterStreaming {
 				MongoCollection<Document> collection = database.getCollection("PROBANDO");
 
 				Document doc = new Document("tweet", status.getText())
-								.append("id", status.getId());
+								.append("id", status.getId())
+								.append("date",status.getCreatedAt().toString());
 
 				collection.insertOne(doc);
 
@@ -109,6 +111,7 @@ public class TwitterStreaming {
 
 		FilterQuery fq = new FilterQuery();
 
+		fq.language(new String[]{"es"});
 		fq.track(keywords.toArray(new String[0]));
 
 		this.twitterStream.addListener(listener);
