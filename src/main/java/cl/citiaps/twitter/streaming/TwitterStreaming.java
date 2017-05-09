@@ -97,10 +97,16 @@ public class TwitterStreaming {
                                 
                                 Calendar calendar = Calendar.getInstance();
                                 int hourTweet = calendar.get(Calendar.HOUR_OF_DAY);
+                                int year = calendar.get(Calendar.YEAR);
+                                int month = calendar.get(Calendar.MONTH) + 1;
+                                int day = calendar.get(Calendar.DAY_OF_MONTH);
 
 				Document doc = new Document("tweet", status.getText())
                                                 .append("id", status.getId())
-                                                .append("hora", hourTweet);
+                                                .append("hora", hourTweet)
+                                                .append("day", day)
+                                                .append("month", month)
+                                                .append("year",year);
 
 				collection.insertOne(doc);
 
