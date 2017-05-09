@@ -88,6 +88,7 @@ public class TwitterStreaming {
 				System.out.println("--------- DOCUMENTO TWEET ----------- ");
 				System.out.println(status.getId());
 				System.out.println(status.getText());
+				System.out.println(status.getCreatedAt().toString());
 				System.out.println("\n");
 
 				MongoClient mongoClient = new MongoClient();
@@ -114,6 +115,7 @@ public class TwitterStreaming {
 
 		FilterQuery fq = new FilterQuery();
 
+		fq.language(new String[]{"es"});
 		fq.track(keywords.toArray(new String[0]));
 
 		this.twitterStream.addListener(listener);
