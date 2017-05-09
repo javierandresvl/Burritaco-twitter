@@ -36,6 +36,7 @@ import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TwitterStreaming {
@@ -92,9 +93,13 @@ public class TwitterStreaming {
 				MongoClient mongoClient = new MongoClient();
 				MongoDatabase database = mongoClient.getDatabase("Burritaco");
 				MongoCollection<Document> collection = database.getCollection("PROBANDO");
+                                
+                                Calendar calendar = Calendar.getInstance();
+                                int hourTweet = calendar.get(Calendar.HOUR_OF_DAY);
 
 				Document doc = new Document("tweet", status.getText())
-								.append("id", status.getId());
+                                                .append("id", status.getId())
+                                                .append("hora", hourTweet);
 
 				collection.insertOne(doc);
 
