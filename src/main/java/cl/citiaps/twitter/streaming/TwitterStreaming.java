@@ -89,30 +89,53 @@ public class TwitterStreaming {
 				System.out.println(status.getId());
 				System.out.println(status.getText());
 				System.out.println(status.getCreatedAt().toString());
-				System.out.println("\n");
+                                System.out.println("user: " + status.getUser().getScreenName());
+                                System.out.println("es retweet? " + status.isRetweet());
 
-				MongoClient mongoClient = new MongoClient();
-				MongoDatabase database = mongoClient.getDatabase("Burritaco");
-				MongoCollection<Document> collection = database.getCollection("PROBANDO");
+                                
+				
                                 
                                 Calendar calendar = Calendar.getInstance();
                                 int hourTweet = calendar.get(Calendar.HOUR_OF_DAY);
                                 int year = calendar.get(Calendar.YEAR);
                                 int month = calendar.get(Calendar.MONTH) + 1;
                                 int day = calendar.get(Calendar.DAY_OF_MONTH);
+                                
+                                boolean isRetweet = status.isRetweet();
+                                String originalUser = "";
+                                
+                                if(isRetweet)
+                                {
+                                    originalUser = status.getRetweetedStatus().getUser().getScreenName();
+                                }
+                                else
+                                {
+                                    originalUser = status.getUser().getScreenName();
+                                }
 
-				Document doc = new Document("tweet", status.getText())
-                                                .append("id", status.getId())
-                                                .append("hora", hourTweet)
-                                                .append("day", day)
-                                                .append("month", month)
-                                                .append("year",year);
+                                System.out.println("original user: " + originalUser);
+                                
+                                System.out.println("\n");
+                                
+                                MongoClient mongoClient = new MongoClient();
+				MongoDatabase database = mongoClient.getDatabase("Burritaco");
+				MongoCollection<Document> collection = database.getCollection("PROBANDO");
+                                
+                                Document doc = new Document("tweet", status.getText())
+                                    .append("id", status.getId())
+                                    .append("hora", hourTweet)
+                                    .append("day", day)
+                                    .append("month", month)
+                                    .append("year",year)
+                                    .append("user", status.getUser().getScreenName())
+                                    .append("isRetweet", isRetweet)
+                                    .append("originalUser", originalUser);
 
-				collection.insertOne(doc);
+                                collection.insertOne(doc);
 
-				System.out.println("\n contador = " + collection.count() + "\n");
+                                System.out.println("\n contador = " + collection.count() + "\n");
 
-				mongoClient.close();
+                                mongoClient.close();
 
 
 
